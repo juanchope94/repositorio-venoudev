@@ -1,0 +1,8 @@
+.contenedor{
+    width: 60%;
+    border: solid black;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    
+}
