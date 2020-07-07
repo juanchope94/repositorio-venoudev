@@ -2,52 +2,78 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Person from './Person/Person'
+import Button from 'react-bootstrap/Button'
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       personas: [
-        { name: 'Mauricio', age: '25' },
-        { name: 'Camila', age: '25' },
-        { name: 'Yeison', age: '25' },
-        { name: 'Viviana', age: '25' },
-      ]
+        { id: 'id1', name: 'Mauricio', age: '25' },
+        { id: 'id2', name: 'Camila', age: '25' },
+        { id: 'id3', name: 'Yeison', age: '25' },
+        { id: 'id4', name: 'Viviana', age: '25' },
+      ],
+      showPerson: true
     };
   }
 
-  switchNameHandler = () => {
-    this.setState({
-      personas: [{ name: 'Cristian', age: '25' },
-                 { name: 'Juan', age: '25' },
-                 { name: 'Yeison', age: '25' },
-                 { name: 'Viviana', age: '25' },]
-    })
+
+  showPerson = () => {
+    this.setState({ showPerson: !this.state.showPerson })
+  }
+  changeNameHandler = (event, index) => {
+    var persona = this.state.personas;
+    persona[index].name = event.target.value;
+    this.setState({personas:persona});
   }
 
-  changeNameHandler = (event) => {
-    this.setState({
-      personas: [{ name: 'Cristian', age: '25' },
-                 { name: 'Juan', age: '25' },
-                 { name: 'Yeison', age: '25' },
-                 { name: event.target.value, age: '25' },]
-    })
+  delteHandlePerson = (index) => {
+    const personas = this.state.personas;
+    personas.splice(index, 1);
+    this.setState({ personas: personas })
+
   }
 
   render() {
-    const style={
+    const classes = []
+    const style = {
       backgroundColor: 'blue',
-      color:"red"
+      color: "red"
+    }
+    let personas = null;
+    if (this.state.showPerson) {
+
+      personas = (
+        this.state.personas.map((persona, index) => {
+
+          return <Person key={persona.id} change={(event)=>this.changeNameHandler(event,index)} click={() => this.delteHandlePerson(index)} name={persona.name} age={persona.age} />
+        }
+
+        )
+      );
+
+      style.backgroundColor = 'black'
+      style.color = 'green'
+
+    }
+
+    if (this.state.personas.length < 3) {
+      classes.push('bold');
+    }
+
+    if (this.state.personas.length < 2) {
+      classes.push('color');
+    }
+    if (this.state.personas.length < 1) {
+      classes.push('size');  // ['bold','color','size']
     }
     return (
       <div className="App">
-        <h1>Aplicacion en react</h1>
-        <button style={style} onClick={this.switchNameHandler}> Click Me!!</button>
-        <Person  name={this.state.personas[0].name} age={this.state.personas[0].age}> My hobbie favorito es ver series </Person>
-        <Person name={this.state.personas[1].name} age={this.state.personas[1].age} />
-        <Person name={this.state.personas[2].name}  age={this.state.personas[2].age} />
-        <Person click={this.switchNameHandler} change={this.changeNameHandler} name={this.state.personas[3].name} age={this.state.personas[3].age} />
-
+        <h1 className={classes.join(' ')}>Aplicacion en react</h1>
+        <Button onClick={this.showPerson} variant="outline-warning">Click Me!!</Button>{' '}
+   
+        {personas}
       </div>
     );
   }
